@@ -2,4 +2,6 @@
     <string name="app_name">Chat Firebase</string>
     <string name="sign_in">Não tem uma conta? Crie aqui.</string>
     <string name="login">Entrar</string>
+    <string name="email_hint">E-mail</string>
+    <string name="hint_password">Password</string>
 </resources>
