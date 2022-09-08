@@ -40,12 +40,13 @@
     <Button
         android:id="@+id/btn_enter"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="50dp"
         android:layout_marginEnd="16dp"
         android:text="@string/login"
-        android:backgroundTint="@color/teal_200"
+        android:background="@drawable/bg_button_rounded"
+        app:backgroundTint="@android:color/holo_green_dark"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edt_password" />
@@ -58,6 +59,7 @@
         android:textAlignment="center"
         android:layout_marginTop="50dp"
         android:layout_marginEnd="16dp"
+        android:textColor="@android:color/holo_green_dark"
         android:text="@string/sign_in"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
