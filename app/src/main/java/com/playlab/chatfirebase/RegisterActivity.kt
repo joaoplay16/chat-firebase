@@ -1,5 +1,6 @@
 package com.playlab.chatfirebase
 
+import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
@@ -99,6 +100,13 @@ class RegisterActivity : AppCompatActivity() {
                         .addOnSuccessListener { docRef ->
                             Log.d("LOGGER", docRef.id)
 
+                            val intent = Intent(
+                                this@RegisterActivity,
+                                MessagesActivity::class.java
+                            )
+
+                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                            startActivity(intent)
                         }
                         .addOnFailureListener { exception ->
                             Log.d("LOGGER", exception.message.toString())
