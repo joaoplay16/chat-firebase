@@ -1,18 +1,31 @@
 package com.playlab.chatfirebase
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QuerySnapshot
+import com.playlab.chatfirebase.databinding.ActivityContactsBinding
+import com.squareup.picasso.Picasso
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.GroupieViewHolder
+import com.xwray.groupie.Item
 
 class ContactsActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityContactsBinding
+    private lateinit var adapter: GroupAdapter<GroupieViewHolder>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_contacts)
+        binding = ActivityContactsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
+        adapter = GroupAdapter<GroupieViewHolder>()
+        binding.recycler.adapter = adapter
+        binding.recycler.layoutManager = LinearLayoutManager(this)
 
         fetchUsers()
     }
@@ -29,9 +42,25 @@ class ContactsActivity : AppCompatActivity() {
                 if (docs != null) {
                     for (doc in docs){
                         val user = doc.toObject(User::class.java)
-                        Log.d("LOGGER", user?.userName.toString())
+                        adapter.add(UserItem(user!!))
                     }
                 }
             }
     }
+    private class UserItem(private val user: User): Item<GroupieViewHolder>() {
+
+        override fun bind(viewHolder: GroupieViewHolder, position: Int) {
+            val txtUsername = viewHolder.itemView.findViewById<TextView>(R.id.textView)
+            val imgPhoto = viewHolder.itemView.findViewById<ImageView>(R.id.imageView)
+
+            txtUsername.text = user.userName
+
+            Picasso.get()
+                .load(user.profileUrl)
+                .into(imgPhoto)
+        }
+
+        override fun getLayout() = R.layout.item_user
+    }
+
 }
