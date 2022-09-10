@@ -9,8 +9,8 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.ktx.Firebase
 import com.playlab.chatfirebase.databinding.ActivityRegisterBinding
 import java.io.IOException
 import java.util.*
@@ -87,6 +87,23 @@ class RegisterActivity : AppCompatActivity() {
             .addOnSuccessListener { taskSnapshot ->
                 taskSnapshot.storage.downloadUrl.addOnSuccessListener{ uri ->
                     Log.d("LOGGER", uri.toString())
+
+                    val uuid = FirebaseAuth.getInstance().uid!!
+                    val userName = binding.edtNome.text.toString()
+                    val profileUrl = uri.toString()
+
+                    val user = User(uuid, userName, profileUrl)
+
+                    FirebaseFirestore.getInstance().collection("users")
+                        .add(user)
+                        .addOnSuccessListener { docRef ->
+                            Log.d("LOGGER", docRef.id)
+
+                        }
+                        .addOnFailureListener { exception ->
+                            Log.d("LOGGER", exception.message.toString())
+
+                        }
                 }
             }
             .addOnFailureListener {
