@@ -29,6 +29,9 @@ class ContactsActivity : AppCompatActivity() {
 
         adapter.setOnItemClickListener { item, view ->
             val intent = Intent(this, ChatActivity::class.java)
+
+            val userItem = item as UserItem
+            intent.putExtra("user", userItem.user)
             startActivity(intent)
         }
 
@@ -52,7 +55,7 @@ class ContactsActivity : AppCompatActivity() {
                 }
             }
     }
-    private class UserItem(private val user: User): Item<GroupieViewHolder>() {
+    private class UserItem(val user: User): Item<GroupieViewHolder>() {
 
         override fun bind(viewHolder: GroupieViewHolder, position: Int) {
             val txtUsername = viewHolder.itemView.findViewById<TextView>(R.id.textView)

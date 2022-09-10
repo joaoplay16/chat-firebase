@@ -18,6 +18,8 @@ class ChatActivity : AppCompatActivity() {
         binding = ActivityChatBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val user = intent.extras?.getParcelable<User>("user")
+        supportActionBar?.title = user?.userName
 
         adapter = GroupAdapter<GroupieViewHolder>()
         binding.recyclerChat.layoutManager = LinearLayoutManager(this)
