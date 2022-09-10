@@ -96,10 +96,9 @@ class RegisterActivity : AppCompatActivity() {
                     val user = User(uuid, userName, profileUrl)
 
                     FirebaseFirestore.getInstance().collection("users")
-                        .add(user)
-                        .addOnSuccessListener { docRef ->
-                            Log.d("LOGGER", docRef.id)
-
+                        .document(uuid)
+                        .set(user)
+                        .addOnSuccessListener {
                             val intent = Intent(
                                 this@RegisterActivity,
                                 MessagesActivity::class.java
