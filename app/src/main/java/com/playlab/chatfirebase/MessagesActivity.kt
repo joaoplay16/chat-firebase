@@ -34,7 +34,7 @@ class MessagesActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
 
-            R.id.contacts -> {}
+            R.id.contacts -> startActivity(Intent(this, ContactsActivity::class.java))
             R.id.logout -> {
                 FirebaseAuth.getInstance().signOut()
                 verifyAuthentication()
