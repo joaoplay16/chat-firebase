@@ -5,4 +5,6 @@ data class Message(
     val timestamp: Long,
     val fromId: String,
     val toId: String
-)
+){
+    constructor(): this("",0,"","")
+}
