@@ -4,6 +4,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import com.google.firebase.auth.FirebaseAuth
 
 class MessagesActivity : AppCompatActivity() {
@@ -22,5 +24,22 @@ class MessagesActivity : AppCompatActivity() {
 
             startActivity(intent)
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+
+            R.id.contacts -> {}
+            R.id.logout -> {
+                FirebaseAuth.getInstance().signOut()
+                verifyAuthentication()
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

@@ -7,4 +7,6 @@
     <string name="insert">Cadastrar</string>
     <string name="name_hint">Nome</string>
     <string name="photo">Foto</string>
+    <string name="contacts">Contatos</string>
+    <string name="logout">Logout</string>
 </resources>
