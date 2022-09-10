@@ -9,4 +9,6 @@
     <string name="photo">Foto</string>
     <string name="contacts">Contatos</string>
     <string name="logout">Logout</string>
+    <string name="btn_chat">Enviar</string>
+    <string name="message">Mensagem</string>
 </resources>
