@@ -1,31 +1,35 @@
 package com.playlab.chatfirebase
 
-import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
-import androidx.appcompat.app.AppCompatActivity
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import com.google.firebase.FirebaseApp
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.ktx.Firebase
 import com.playlab.chatfirebase.databinding.ActivityRegisterBinding
 import java.io.IOException
+import java.util.*
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
+    private var mSelectedUri: Uri? = null
 
     val launcherImage = registerForActivityResult(
         ActivityResultContracts.GetContent()
     ) { uri ->
+        mSelectedUri = uri
         try {
-
-        }catch (e: IOException){
             val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
             val bitmapDrawable = BitmapDrawable(resources, bitmap)
             binding.btnSelectPhoto.alpha = 0.0f
             binding.imgPhoto.setImageDrawable(bitmapDrawable)
+        }catch (e: IOException){
+
         }
 
     }
@@ -52,10 +56,11 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun createUser(){
         with(binding){
+            val nome = edtNome.text.toString()
             val email = edtEmail.text.toString()
             val senha = edtPassword.text.toString()
 
-            if(email.isNullOrEmpty() || senha.isNullOrEmpty()){
+            if(nome.isNullOrEmpty()|| email.isNullOrEmpty() || senha.isNullOrEmpty()){
                 Toast.makeText(
                     this@RegisterActivity,
                     "Senha e Email devem ser preenchidos",
@@ -65,19 +70,28 @@ class RegisterActivity : AppCompatActivity() {
             }
             FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, senha)
                 .addOnSuccessListener { task ->
-                    Toast.makeText(
-                        this@RegisterActivity,
-                        task.user?.uid,
-                        Toast.LENGTH_SHORT)
-                        .show()
+                    Log.d("LOGGER", task.user?.uid.toString())
+
+                    saveUserInFirebase()
                 }
                 .addOnFailureListener { exception ->
-                    Toast.makeText(
-                        this@RegisterActivity,
-                        exception.message,
-                        Toast.LENGTH_SHORT)
-                        .show()
+                    Log.d("LOGGER", exception.message.toString())
                 }
         }
+    }
+
+    private fun saveUserInFirebase() {
+        val filename = UUID.randomUUID().toString()
+        val ref = FirebaseStorage.getInstance().getReference("/images/$filename")
+        ref.putFile(mSelectedUri!!)
+            .addOnSuccessListener { taskSnapshot ->
+                taskSnapshot.storage.downloadUrl.addOnSuccessListener{ uri ->
+                    Log.d("LOGGER", uri.toString())
+                }
+            }
+            .addOnFailureListener {
+                Log.d("LOGGER", it.toString())
+
+            }
     }
 }
