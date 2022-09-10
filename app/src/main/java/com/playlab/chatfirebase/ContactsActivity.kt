@@ -1,12 +1,12 @@
 package com.playlab.chatfirebase
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.playlab.chatfirebase.databinding.ActivityContactsBinding
@@ -26,6 +26,11 @@ class ContactsActivity : AppCompatActivity() {
         adapter = GroupAdapter<GroupieViewHolder>()
         binding.recycler.adapter = adapter
         binding.recycler.layoutManager = LinearLayoutManager(this)
+
+        adapter.setOnItemClickListener { item, view ->
+            val intent = Intent(this, ChatActivity::class.java)
+            startActivity(intent)
+        }
 
         fetchUsers()
     }
