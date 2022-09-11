@@ -1,18 +1,19 @@
 package com.playlab.chatfirebase
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.installations.FirebaseInstallations
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.ktx.app
 import com.playlab.chatfirebase.databinding.ActivityMessagesBinding
 import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
@@ -36,7 +37,24 @@ class MessagesActivity : AppCompatActivity() {
 
         verifyAuthentication()
 
+        updateToken()
+
         fetchLastMessage()
+    }
+
+    private fun updateToken() {
+
+        val taskInstalationResult = FirebaseInstallations.getInstance().getToken(false)
+
+        val uid = FirebaseAuth.getInstance().uid
+
+        taskInstalationResult.addOnSuccessListener {  result ->
+            if(uid != null){
+                FirebaseFirestore.getInstance().collection("users")
+                    .document(uid)
+                    .update("token", result.token)
+            }
+        }
     }
 
     private fun fetchLastMessage() {
