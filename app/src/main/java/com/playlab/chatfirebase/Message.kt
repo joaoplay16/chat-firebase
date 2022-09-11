@@ -1,6 +1,6 @@
 package com.playlab.chatfirebase
 
-data class Message(
+open class Message(
     val text: String,
     val timestamp: Long,
     val fromId: String,
