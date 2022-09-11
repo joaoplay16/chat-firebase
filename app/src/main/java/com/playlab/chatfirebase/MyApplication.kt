@@ -24,15 +24,13 @@ class MyApplication : Application(), Application.ActivityLifecycleCallbacks {
     }
 
     override fun onActivityCreated(p0: Activity, p1: Bundle?) {
-        TODO("Not yet implemented")
     }
 
     override fun onActivityStarted(p0: Activity) {
-        TODO("Not yet implemented")
     }
 
     override fun onActivityResumed(p0: Activity) {
-        TODO("Not yet implemented")
+        setOnline(true)
     }
 
     override fun onActivityPaused(p0: Activity) {
@@ -40,15 +38,12 @@ class MyApplication : Application(), Application.ActivityLifecycleCallbacks {
     }
 
     override fun onActivityStopped(p0: Activity) {
-        TODO("Not yet implemented")
     }
 
     override fun onActivitySaveInstanceState(p0: Activity, p1: Bundle) {
-        TODO("Not yet implemented")
     }
 
     override fun onActivityDestroyed(p0: Activity) {
-        TODO("Not yet implemented")
     }
 
 }

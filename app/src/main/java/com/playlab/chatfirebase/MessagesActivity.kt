@@ -28,6 +28,10 @@ class MessagesActivity : AppCompatActivity() {
         binding = ActivityMessagesBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val myApplication = application as MyApplication
+
+        application.registerActivityLifecycleCallbacks(myApplication)
+
         adapter = GroupAdapter()
 
         with(binding){
@@ -63,7 +67,7 @@ class MessagesActivity : AppCompatActivity() {
         FirebaseFirestore.getInstance().collection("/last-messages")
             .document(uid)
             .collection("contacts")
-            .addSnapshotListener{ snapshots , exception ->
+            .addSnapshotListener{ snapshots , _ ->
                 val docChanges = snapshots?.documentChanges
 
                 docChanges?.let {

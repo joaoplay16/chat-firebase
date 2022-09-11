@@ -93,7 +93,7 @@ class RegisterActivity : AppCompatActivity() {
                     val userName = binding.edtNome.text.toString()
                     val profileUrl = uri.toString()
 
-                    val user = User(uuid, userName, profileUrl)
+                    val user = User(uuid, userName, profileUrl, "", false)
 
                     FirebaseFirestore.getInstance().collection("users")
                         .document(uuid)

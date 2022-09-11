@@ -58,7 +58,7 @@ class ChatActivity : AppCompatActivity() {
                 .document(fromId)
                 .collection(toId)
                 .orderBy("timestamp", Query.Direction.ASCENDING)
-                .addSnapshotListener { querySnapshot, exception ->
+                .addSnapshotListener { querySnapshot, _ ->
                     val documentChanges = querySnapshot?.documentChanges
 
                     if(documentChanges != null){

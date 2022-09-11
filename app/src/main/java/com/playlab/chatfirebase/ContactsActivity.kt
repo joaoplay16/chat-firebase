@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.playlab.chatfirebase.databinding.ActivityContactsBinding
@@ -47,10 +48,13 @@ class ContactsActivity : AppCompatActivity() {
                 }
 
                 val docs: List<DocumentSnapshot>? = querySnapshot?.documents
+                adapter.clear()
                 if (docs != null) {
                     for (doc in docs){
-                        val user = doc.toObject(User::class.java)
-                        adapter.add(UserItem(user!!))
+                        val user = doc.toObject(User::class.java)!!
+                        val uid = FirebaseAuth.getInstance().uid
+                        if(user.uuid == uid) continue
+                        adapter.add(UserItem(user))
                     }
                 }
             }
