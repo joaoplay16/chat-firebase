@@ -119,8 +119,11 @@ class ChatActivity : AppCompatActivity() {
                             fromName = me!!.userName
                         )
 
+                        Log.d("LOGGER", "user token ${user!!.token.take(20)}")
+                        Log.d("LOGGER", "user token ${me!!.userName}")
+
                         FirebaseFirestore.getInstance().collection("/notifications")
-                            .document(user!!.token)
+                            .document(user!!.token.take(20))
                             .set(notification)
                     }
 
