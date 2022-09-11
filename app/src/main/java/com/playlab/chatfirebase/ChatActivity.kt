@@ -1,15 +1,13 @@
 package com.playlab.chatfirebase
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Adapter
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
-import com.google.firebase.firestore.ktx.toObject
 import com.playlab.chatfirebase.databinding.ActivityChatBinding
 import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
@@ -111,6 +109,20 @@ class ChatActivity : AppCompatActivity() {
                         .collection("contacts")
                         .document(toId)
                         .set(contact)
+
+                    if(!user!!.online){
+                        val notification = Notification(
+                            fromId = message.fromId,
+                            toId = message.toId,
+                            timestamp = message.timestamp,
+                            text = message.text,
+                            fromName = me!!.userName
+                        )
+
+                        FirebaseFirestore.getInstance().collection("/notifications")
+                            .document(user!!.token)
+                            .set(notification)
+                    }
 
                 }
                 .addOnFailureListener { e ->
