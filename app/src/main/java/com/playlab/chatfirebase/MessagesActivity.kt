@@ -6,14 +6,58 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentChange
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.toObject
+import com.playlab.chatfirebase.databinding.ActivityMessagesBinding
+import com.squareup.picasso.Picasso
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.GroupieViewHolder
+import com.xwray.groupie.Item
 
 class MessagesActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMessagesBinding
+    private lateinit var adapter: GroupAdapter<GroupieViewHolder>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_messages)
+        binding = ActivityMessagesBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        adapter = GroupAdapter()
+
+        with(binding){
+            recyclerContact.layoutManager = LinearLayoutManager(this@MessagesActivity)
+            recyclerContact.adapter = adapter
+        }
 
         verifyAuthentication()
+
+        fetchLastMessage()
+    }
+
+    private fun fetchLastMessage() {
+        val uid = FirebaseAuth.getInstance().uid!!
+
+        FirebaseFirestore.getInstance().collection("/last-messages")
+            .document(uid)
+            .collection("contacts")
+            .addSnapshotListener{ snapshots , exception ->
+                val docChanges = snapshots?.documentChanges
+
+                docChanges?.let {
+                    docChanges.map { doc ->
+                        if (doc.type == DocumentChange.Type.ADDED){
+                            val contact = doc.document.toObject(Contact::class.java)
+
+                            adapter.add(ContactItem(contact))
+                        }
+                    }
+                }
+            }
     }
 
     private fun verifyAuthentication() {
@@ -41,5 +85,23 @@ class MessagesActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private class ContactItem(val contact: Contact) : Item<GroupieViewHolder>() {
+
+        override fun bind(viewHolder: GroupieViewHolder, position: Int) {
+            val userName = viewHolder.itemView.findViewById<TextView>(R.id.textView)
+            val message = viewHolder.itemView.findViewById<TextView>(R.id.textView2)
+            val imgPhoto = viewHolder.itemView.findViewById<ImageView>(R.id.imageView)
+
+            userName.text = contact.username
+            message.text = contact.lastMessage
+
+            Picasso.get().load(contact.photoUrl).into(imgPhoto)
+        }
+
+        override fun getLayout(): Int {
+            return R.layout.item_user_message
+        }
     }
 }
