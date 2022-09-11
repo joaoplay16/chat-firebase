@@ -82,8 +82,8 @@ class ChatActivity : AppCompatActivity() {
         val toId = user?.uuid!!
         val timestamp = System.currentTimeMillis()
 
-
         binding.edtChat.text = null
+
         val message = Message(
             fromId = fromId,
             toId = toId,
@@ -98,6 +98,20 @@ class ChatActivity : AppCompatActivity() {
                 .add(message)
                 .addOnSuccessListener { docRef ->
                     Log.d("LOGGER", "sender ${docRef.id}")
+                    val contact = Contact(
+                        uuid = toId,
+                        username = user!!.userName,
+                        photoUrl = user!!.profileUrl,
+                        timestamp = message.timestamp,
+                        lastMessage = message.text
+                    )
+
+                    FirebaseFirestore.getInstance().collection("/last-messages")
+                        .document(fromId)
+                        .collection("contacts")
+                        .document(toId)
+                        .set(contact)
+
                 }
                 .addOnFailureListener { e ->
                     Log.d("LOGGER", e.message.toString())
@@ -110,6 +124,19 @@ class ChatActivity : AppCompatActivity() {
                 .addOnSuccessListener { docRef ->
                     Log.d("LOGGER", "receiver ${docRef.id}")
 
+                    val contact = Contact(
+                        uuid = toId,
+                        username = user!!.userName,
+                        photoUrl = user!!.profileUrl,
+                        timestamp = message.timestamp,
+                        lastMessage = message.text
+                    )
+
+                    FirebaseFirestore.getInstance().collection("/last-messages")
+                        .document(toId)
+                        .collection("contacts")
+                        .document(fromId)
+                        .set(contact)
                 }
                 .addOnFailureListener { e ->
                     Log.d("LOGGER", e.message.toString())
