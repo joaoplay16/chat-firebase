@@ -141,8 +141,8 @@ class ChatActivity : AppCompatActivity() {
 
                     val contact = Contact(
                         uuid = toId,
-                        username = user!!.userName,
-                        photoUrl = user!!.profileUrl,
+                        username = me!!.userName,
+                        photoUrl = me!!.profileUrl,
                         timestamp = message.timestamp,
                         lastMessage = message.text
                     )
