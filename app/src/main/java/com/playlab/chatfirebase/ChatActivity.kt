@@ -2,6 +2,7 @@ package com.playlab.chatfirebase
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -28,6 +29,12 @@ class ChatActivity : AppCompatActivity() {
         user = intent.extras?.getParcelable("user")
         supportActionBar?.title = user?.userName
 
+       /* if (user?.online == true){
+            binding.txtOnline.visibility = View.VISIBLE
+        } else {
+            binding.txtOnline.visibility = View.GONE
+        }*/
+
         adapter = GroupAdapter<GroupieViewHolder>()
 
         val llManager = LinearLayoutManager(this)
@@ -46,6 +53,22 @@ class ChatActivity : AppCompatActivity() {
             .addOnSuccessListener {  docSnapshot ->
                 me = docSnapshot.toObject(User::class.java)
                 fetchMessages()
+            }
+
+        userOnlineListener()
+    }
+
+
+    private fun userOnlineListener(){
+        FirebaseFirestore.getInstance().collection("/users")
+            .document(user?.uuid!!)
+            .addSnapshotListener {  querySnapshot, _ ->
+                val usuario = querySnapshot?.toObject(User::class.java)
+                if (usuario?.online == true){
+                    binding.txtOnline.visibility = View.VISIBLE
+                } else {
+                    binding.txtOnline.visibility = View.GONE
+                }
             }
     }
 
