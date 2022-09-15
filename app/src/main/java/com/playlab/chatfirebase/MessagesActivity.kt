@@ -39,6 +39,23 @@ class MessagesActivity : AppCompatActivity() {
             recyclerContact.adapter = adapter
         }
 
+        adapter.setOnItemClickListener { item, view ->
+            val intent = Intent(this, ChatActivity::class.java)
+
+            val userItem = item as ContactItem
+            val user = User(
+                uuid = userItem.contact.uuid,
+                userName = userItem.contact.username,
+                profileUrl = userItem.contact.photoUrl,
+                token = "",
+                online = false
+            )
+//            Log.d("LOGGER", "user uid ${userItem.user.uuid}")
+
+            intent.putExtra("user", user)
+            startActivity(intent)
+        }
+
         verifyAuthentication()
 
         updateToken()

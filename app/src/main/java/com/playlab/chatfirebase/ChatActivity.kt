@@ -163,7 +163,7 @@ class ChatActivity : AppCompatActivity() {
                     Log.d("LOGGER", "receiver ${docRef.id}")
 
                     val contact = Contact(
-                        uuid = toId,
+                        uuid = fromId,
                         username = me!!.userName,
                         photoUrl = me!!.profileUrl,
                         timestamp = message.timestamp,
